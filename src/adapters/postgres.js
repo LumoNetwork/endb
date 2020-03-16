@@ -1,7 +1,6 @@
 'use strict';
 
 const {safeRequire} = require('../util');
-const pg = safeRequire('pg');
 const Sql = require('./Sql');
 
 module.exports = class PostgreSQL extends Sql {
@@ -15,7 +14,7 @@ module.exports = class PostgreSQL extends Sql {
 		);
 		options.connect = () =>
 			Promise.resolve().then(() => {
-				const client = new pg.Pool({
+				const client = new (options.adapter || safeRequire('pg')).Pool({
 					connectionString: options.uri
 				});
 				return sql => client.query(sql).then(data => data.rows);

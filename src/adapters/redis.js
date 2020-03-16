@@ -2,13 +2,12 @@
 
 const {EventEmitter} = require('events');
 const {safeRequire} = require('../util');
-const Ioredis = safeRequire('ioredis');
 
 module.exports = class Redis extends EventEmitter {
 	constructor(options = {}) {
 		super();
 		this.options = Object.assign({}, options);
-		const client = new Ioredis(this.options.uri, this.options);
+		const client = new (options.adapter || safeRequire('ioredis'))(this.options.uri, this.options);
 		this.db = [
 			'get',
 			'keys',

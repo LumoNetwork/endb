@@ -2,10 +2,10 @@
 
 const {EventEmitter} = require('events');
 const {removeKeyPrefix, safeRequire} = require('../util');
-const sql = safeRequire('sql');
 
 module.exports = class SQL extends EventEmitter {
 	constructor(options = {}) {
+		const sql = safeRequire('sql');
 		super();
 		this.options = Object.assign(
 			{

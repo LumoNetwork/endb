@@ -1,8 +1,7 @@
 'use strict';
 
 const {safeRequire} = require('../util');
-const mysql = safeRequire('mysql2/promise');
-const Sql = require('./Sql');
+const Sql = require('./sql');
 
 module.exports = class MySQL extends Sql {
 	constructor(options = {}) {
@@ -15,7 +14,7 @@ module.exports = class MySQL extends Sql {
 		);
 		options.connect = () =>
 			Promise.resolve()
-				.then(() => mysql.createConnection(options.uri))
+				.then(() => (options.adapter || safeRequire('mysql2/promise')).createConnection(options.uri))
 				.then(connection => {
 					return sql => connection.execute(sql).then(data => data[0]);
 				});

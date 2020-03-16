@@ -2,7 +2,6 @@
 
 const {EventEmitter} = require('events');
 const {safeRequire} = require('../util');
-const Level = safeRequire('level');
 
 module.exports = class LevelDB extends EventEmitter {
 	constructor(options = {}) {
@@ -13,7 +12,7 @@ module.exports = class LevelDB extends EventEmitter {
 			},
 			options
 		);
-		const client = new Level(
+		const client = new (options.adapter || safeRequire('level'))(
 			options.uri.replace(/^leveldb:\/\//, ''),
 			options,
 			error => {

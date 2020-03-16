@@ -53,22 +53,40 @@ class Util {
 
 	static load(options) {
 		const adapters = {
-			level: './adapters/leveldb',
-			leveldb: './adapters/leveldb',
-			mongo: './adapters/mongodb',
-			mongodb: './adapters/mongodb',
-			mysql: './adapters/mysql',
-			mysql2: './adapters/mysql',
-			postgres: './adapters/postgres',
-			postgresql: './adapters/postgres',
-			redis: './adapters/redis',
-			sqlite: './adapters/sqlite',
-			sqlite3: './adapters/sqlite'
+			level: require('./adapters/leveldb'),
+			leveldb: require('./adapters/leveldb'),
+			mongo: require('./adapters/mongodb'),
+			mongodb: require('./adapters/mongodb'),
+			mysql: require('./adapters/mysql'),
+			mysql2: require('./adapters/mysql'),
+			postgres: require('./adapters/postgres'),
+			postgresql: require('./adapters/postgres'),
+			redis: require('./adapters/redis'),
+			sqlite: require('./adapters/sqlite'),
+			sqlite3: require('./adapters/sqlite')
 		};
 		if (options.adapter || options.uri) {
-			const adapter = options.adapter || /^[^:]*/.exec(options.uri)[0];
-			if (adapters[adapter] !== undefined) {
-				return new (require(adapters[adapter]))(options);
+			const { adapter, adapterName = (typeof options.adapter === 'string' ? options.adapter : /^[^:]*/.exec(options.uri)[0]) } = options;
+
+			// function/object adapter detect
+			if (typeof adapter === 'function' || typeof adapter === 'object') {
+				if (!options.adapterName) {
+					if (Util.propExists(adapter, 'prototype.constructor.errors.LevelUPError')) {
+						return new adapters.leveldb(options);
+					} else if(Util.propExists(adapter, 'prototype.constructor.DBRef')) {
+						return new adapters.mongodb(options);
+					} else if (Util.propExists(adapter, 'Charsets')) {
+						return new adapters.mysql(options);
+					} else if(Util.propExists(adapter, 'types.PG_NODE_TREE')) {
+						return new adapters.postgres(options);
+					} else if(Util.propExists(adapter, 'prototype.constructor.name') && adapter.prototype.constructor.name === 'Redis') {
+						return new adapters.redis(options);
+					} else if(Util.propExists(adapter, 'NOTADB')) {
+						return new adapters.sqlite(options);
+					}
+				}
+			} else if (adapters[adapterName] !== undefined) {
+				return new adapters[adapterName](options);
 			}
 		}
 
@@ -162,12 +180,11 @@ class Util {
 				id += ' & sql';
 			}
 
-			console.error(
+			throw new Error(
 				`Install ${id} to continue; run "npm i ${id
 					.split(' & ')
 					.join(' ')}" to install.`
 			);
-			return process.exit(0);
 		}
 	}
 
@@ -224,8 +241,12 @@ class Util {
 			throw new TypeError('The option "namespace" must be a string.');
 		}
 
-		if (options.adapter && typeof options.adapter !== 'string') {
-			throw new TypeError('The option "adapter" must be a string.');
+		if (options.adapter && !(typeof options.adapter === 'string' || typeof options.adapter === 'function' || typeof options.adapter === 'object')) {
+			throw new TypeError('The option "adapter" must be a string or an adapter.');
+		}
+
+		if (options.adapterName && typeof options.adapterName !== 'string') {
+			throw new TypeError('The option "adapterName" must be a string.');
 		}
 
 		if (options.serialize && typeof options.serialize !== 'function') {
@@ -243,6 +264,12 @@ class Util {
 		if (options.table && typeof options.table !== 'string') {
 			throw new TypeError('The option "table" must be a string.');
 		}
+	}
+
+	static propExists(obj, path) {
+		return !!path.split(".").reduce((obj, prop) => {
+			return obj && obj[prop] ? obj[prop] : undefined;
+		}, obj)
 	}
 }
 

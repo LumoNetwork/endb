@@ -2,7 +2,6 @@
 
 const {EventEmitter} = require('events');
 const {safeRequire, removeKeyPrefix} = require('../util');
-const mongojs = safeRequire('mongojs');
 
 module.exports = class MongoDB extends EventEmitter {
 	constructor(options = {}) {
@@ -15,7 +14,7 @@ module.exports = class MongoDB extends EventEmitter {
 			},
 			options
 		);
-		this.client = mongojs(this.options.url);
+		this.client = (options.adapter || safeRequire('mongojs'))(this.options.url);
 		const collection = this.client.collection(this.options.collection);
 		collection.createIndex(
 			{key: 1},
