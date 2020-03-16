@@ -15,17 +15,20 @@ module.exports = class SQLite extends Sql {
 		options.path = options.uri.replace(/^sqlite:\/\//, '');
 		options.connect = () =>
 			new Promise((resolve, reject) => {
-				const db = new (options.adapter || safeRequire('sqlite3')).Database(options.path, error => {
-					if (error) {
-						reject(error);
-					} else {
-						if (options.busyTimeout) {
-							db.configure('busyTimeout', options.busyTimeout);
-						}
+				const db = new (options.adapter || safeRequire('sqlite3')).Database(
+					options.path,
+					error => {
+						if (error) {
+							reject(error);
+						} else {
+							if (options.busyTimeout) {
+								db.configure('busyTimeout', options.busyTimeout);
+							}
 
-						resolve(db);
+							resolve(db);
+						}
 					}
-				});
+				);
 			}).then(db =>
 				require('util')
 					.promisify(db.all)

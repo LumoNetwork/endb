@@ -14,7 +14,11 @@ module.exports = class MySQL extends Sql {
 		);
 		options.connect = () =>
 			Promise.resolve()
-				.then(() => (options.adapter || safeRequire('mysql2/promise')).createConnection(options.uri))
+				.then(() =>
+					(options.adapter || safeRequire('mysql2/promise')).createConnection(
+						options.uri
+					)
+				)
 				.then(connection => {
 					return sql => connection.execute(sql).then(data => data[0]);
 				});

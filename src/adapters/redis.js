@@ -7,7 +7,10 @@ module.exports = class Redis extends EventEmitter {
 	constructor(options = {}) {
 		super();
 		this.options = Object.assign({}, options);
-		const client = new (options.adapter || safeRequire('ioredis'))(this.options.uri, this.options);
+		const client = new (options.adapter || safeRequire('ioredis'))(
+			this.options.uri,
+			this.options
+		);
 		this.db = [
 			'get',
 			'keys',

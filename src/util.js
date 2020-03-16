@@ -67,26 +67,51 @@ class Util {
 			sqlite3: require('./adapters/sqlite')
 		};
 		if (options.adapter || options.uri) {
-			const { adapter, adapterName = (typeof options.adapter === 'string' ? options.adapter : /^[^:]*/.exec(options.uri)[0]) } = options;
+			let {
+				adapter,
+				adapterName = typeof options.adapter === 'string'
+					? options.adapter
+					: /^[^:]*/.exec(options.uri)[0]
+			} = options;
 
-			// function/object adapter detect
+			// Function/object adapter detect
 			if (typeof adapter === 'function' || typeof adapter === 'object') {
 				if (!options.adapterName) {
-					if (Util.propExists(adapter, 'prototype.constructor.errors.LevelUPError')) {
-						return new adapters.leveldb(options);
-					} else if(Util.propExists(adapter, 'prototype.constructor.DBRef')) {
-						return new adapters.mongodb(options);
-					} else if (Util.propExists(adapter, 'Charsets')) {
-						return new adapters.mysql(options);
-					} else if(Util.propExists(adapter, 'types.PG_NODE_TREE')) {
-						return new adapters.postgres(options);
-					} else if(Util.propExists(adapter, 'prototype.constructor.name') && adapter.prototype.constructor.name === 'Redis') {
-						return new adapters.redis(options);
-					} else if(Util.propExists(adapter, 'NOTADB')) {
-						return new adapters.sqlite(options);
+					if (
+						Util.propExists(
+							adapter,
+							'prototype.constructor.errors.LevelUPError'
+						)
+					) {
+						adapterName = 'leveldb';
+					}
+
+					if (Util.propExists(adapter, 'prototype.constructor.DBRef')) {
+						adapterName = 'mongodb';
+					}
+
+					if (Util.propExists(adapter, 'Charsets')) {
+						adapterName = 'mysql';
+					}
+
+					if (Util.propExists(adapter, 'types.PG_NODE_TREE')) {
+						adapterName = 'postgres';
+					}
+
+					if (
+						Util.propExists(adapter, 'prototype.constructor.name') &&
+						adapter.prototype.constructor.name === 'Redis'
+					) {
+						adapterName = 'redis';
+					}
+
+					if (Util.propExists(adapter, 'NOTADB')) {
+						adapterName = 'sqlite';
 					}
 				}
-			} else if (adapters[adapterName] !== undefined) {
+			}
+
+			if (adapters[adapterName] !== undefined) {
 				return new adapters[adapterName](options);
 			}
 		}
@@ -242,8 +267,17 @@ class Util {
 			throw new TypeError('The option "namespace" must be a string.');
 		}
 
-		if (options.adapter && !(typeof options.adapter === 'string' || typeof options.adapter === 'function' || typeof options.adapter === 'object')) {
-			throw new TypeError('The option "adapter" must be a string or an adapter.');
+		if (
+			options.adapter &&
+			!(
+				typeof options.adapter === 'string' ||
+				typeof options.adapter === 'function' ||
+				typeof options.adapter === 'object'
+			)
+		) {
+			throw new TypeError(
+				'The option "adapter" must be a string or an adapter.'
+			);
 		}
 
 		if (options.adapterName && typeof options.adapterName !== 'string') {
@@ -268,9 +302,11 @@ class Util {
 	}
 
 	static propExists(obj, path) {
-		return !!path.split(".").reduce((obj, prop) => {
-			return obj && obj[prop] ? obj[prop] : undefined;
-		}, obj)
+		return Boolean(
+			path.split('.').reduce((obj, prop) => {
+				return obj && obj[prop] ? obj[prop] : undefined;
+			}, obj)
+		);
 	}
 }
 
