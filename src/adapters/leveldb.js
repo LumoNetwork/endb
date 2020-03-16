@@ -17,7 +17,7 @@ module.exports = class LevelDB extends EventEmitter {
 			options.uri.replace(/^leveldb:\/\//, ''),
 			options,
 			error => {
-				this.emit('error', error);
+				if (error) this.emit('error', error);
 			}
 		);
 		this.db = [
