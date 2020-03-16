@@ -1,6 +1,6 @@
 {
-    "name": "endb",
-    "version": "0.21.2",
+    "name": "@lumoproject/endb",
+    "version": "0.21.3",
     "description": "Simple key-value storage with support for multiple backends",
     "main": "src/index.js",
     "typings": "typings/index.d.ts",
@@ -14,7 +14,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/chroventer/endb.git"
+        "url": "git+https://github.com/LumoNetwork/endb.git"
     },
     "keywords": [
         "endb",
@@ -22,12 +22,10 @@
         "cache",
         "javascript"
     ],
-    "author": "chroventer (https://github.com/chroventer)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/chroventer/endb/issues"
+        "url": "https://github.com/LumoNetwork/endb/issues"
     },
-    "homepage": "https://endb.js.org",
     "devDependencies": {
         "ava": "^3.3.0",
         "docma": "^3.2.2",
