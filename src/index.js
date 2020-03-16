@@ -208,10 +208,10 @@ class Endb extends EventEmitter {
 		}
 
 		if (this.options.store instanceof Map) {
-			const res = await this.options.store.has(
+			const result = await this.options.store.has(
 				Util.addKeyPrefix(key, this.options.namespace)
 			);
-			return res;
+			return result;
 		}
 
 		return Boolean(await this.get(key));

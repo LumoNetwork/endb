@@ -36,7 +36,7 @@ Docma.create()
 					},
 					{
 						label: 'Documentation',
-						href: '?api=endb',
+						href: `?api=${Package.name}`,
 						iconClass: 'ico-book'
 					},
 					{

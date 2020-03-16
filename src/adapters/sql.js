@@ -42,15 +42,15 @@ module.exports = class SQL extends EventEmitter {
 
 	all() {
 		return this.query(this.entry.select('*').toString()).then(rows => {
-			const arr = [];
+			const array = [];
 			for (const i in rows) {
-				arr.push({
+				array.push({
 					key: removeKeyPrefix(rows[i].key, this.options.namespace),
 					value: this.options.deserialize(rows[i].value)
 				});
 			}
 
-			return arr;
+			return array;
 		});
 	}
 

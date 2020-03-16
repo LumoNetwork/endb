@@ -1,11 +1,11 @@
 {
     "name": "endb",
-    "version": "0.21.2",
+    "version": "0.21.3",
     "description": "Simple key-value storage with support for multiple backends",
     "main": "src/index.js",
     "typings": "typings/index.d.ts",
     "scripts": {
-        "test": "npm run lint:fix && ava --serial",
+        "test": "npm run lint && ava --serial",
         "test:watch": "ava --watch",
         "lint": "xo src",
         "lint:fix": "xo src --fix",
@@ -29,9 +29,9 @@
     },
     "homepage": "https://endb.js.org",
     "devDependencies": {
-        "ava": "^3.3.0",
+        "ava": "^3.5.0",
         "docma": "^3.2.2",
-        "xo": "^0.25.4"
+        "xo": "^0.28.0"
     },
     "xo": {
         "prettier": true,

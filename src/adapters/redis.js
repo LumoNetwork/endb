@@ -17,9 +17,9 @@ module.exports = class Redis extends EventEmitter {
 			'srem',
 			'smembers',
 			'end'
-		].reduce((obj, method) => {
-			obj[method] = require('util').promisify(client[method].bind(client));
-			return obj;
+		].reduce((object, method) => {
+			object[method] = require('util').promisify(client[method].bind(client));
+			return object;
 		}, {});
 		client.on('error', error => this.emit('error', error));
 	}

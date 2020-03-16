@@ -44,7 +44,8 @@ class Util {
 				.call(path, regexp)
 				.filter(Boolean)
 				.reduce(
-					(res, key) => (res !== null && res !== undefined ? res[key] : res),
+					(result, key) =>
+						result !== null && result !== undefined ? result[key] : result,
 					object
 				);
 		const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);

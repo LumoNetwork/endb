@@ -23,26 +23,29 @@ module.exports = class MongoDB extends EventEmitter {
 				background: true
 			}
 		);
-		this.db = ['update', 'find', 'findOne', 'remove'].reduce((obj, method) => {
-			obj[method] = require('util').promisify(
-				collection[method].bind(collection)
-			);
-			return obj;
-		}, {});
+		this.db = ['update', 'find', 'findOne', 'remove'].reduce(
+			(object, method) => {
+				object[method] = require('util').promisify(
+					collection[method].bind(collection)
+				);
+				return object;
+			},
+			{}
+		);
 		this.client.on('error', error => this.emit('error', error));
 	}
 
 	all() {
 		return this.db.find().then(data => {
-			const arr = [];
+			const array = [];
 			for (const i in data) {
-				arr.push({
+				array.push({
 					key: removeKeyPrefix(data[i].key, this.options.namespace),
 					value: this.options.deserialize(data[i].value)
 				});
 			}
 
-			return arr;
+			return array;
 		});
 	}
 
