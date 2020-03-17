@@ -35,7 +35,6 @@
     },
     "xo": {
         "prettier": true,
-        "semicolon": true,
         "rules": {
             "guard-for-in": 0,
             "no-negated-condition": 0

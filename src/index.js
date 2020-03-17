@@ -49,7 +49,7 @@ class Endb extends EventEmitter {
 
 	/**
 	 * Gets all the elements from the database.
-	 * @return {Promise<any[]>} All the elements in the database.
+	 * @return {Promise<any[]|undefined>} All the elements in the database.
 	 */
 	all() {
 		return Promise.resolve()
@@ -73,7 +73,7 @@ class Endb extends EventEmitter {
 
 	/**
 	 * Clears all elements from the database.
-	 * @return {Promise<void>} Returns `undefined`
+	 * @return {Promise<undefined>} Returns `undefined`
 	 */
 	clear() {
 		return Promise.resolve().then(() => this.options.store.clear());
@@ -108,7 +108,7 @@ class Endb extends EventEmitter {
 	 * Ensures if an element exists in the database. If the element does not exist, sets the element to the database and returns the value.
 	 * @param {string} key The key of the element to ensure.
 	 * @param {*} value The value of the element to ensure.
-	 * @return {Promise<*>} The (default) value of the element.
+	 * @return {Promise<any|undefined>} The (default) value of the element.
 	 * @example
 	 * await Endb.set('en', 'db');
 	 *
@@ -140,7 +140,7 @@ class Endb extends EventEmitter {
 	 * See {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/get MDN} for more details.
 	 * @param {Function} fn The function to execute on each value in the element.
 	 * @param {*} [thisArg] Object to use as `this` inside callback.
-	 * @return {Promise<*>} The first element in the database that satisfies the provided testing function. Otherwise `undefined` is returned
+	 * @return {Promise<*|undefined>} The first element in the database that satisfies the provided testing function. Otherwise `undefined` is returned
 	 * @example
 	 * await Endb.set('foo', 'bar');
 	 * await Endb.set('profile', {
@@ -174,7 +174,7 @@ class Endb extends EventEmitter {
 	 * Gets the value of an element from the database by key.
 	 * @param {string} key The key of the element to get.
 	 * @param {string} [path=null] The path of the property to get from the value.
-	 * @return {Promise<*>} The value of the element, or `undefined` if the element cannot be found in the database.
+	 * @return {Promise<*|undefined>} The value of the element, or `undefined` if the element cannot be found in the database.
 	 * @example
 	 * const data = await Endb.get('foo');
 	 * console.log(data); // 'bar'
@@ -229,17 +229,17 @@ class Endb extends EventEmitter {
 	/**
 	 * Creates multiple instances of Endb.
 	 * @param {string[]} names An array of strings. Each element will create new instance.
-	 * @param {Object} [options=EndbOptions] The options for the instances.
+	 * @param {EndbOptions} [options=EndbOptions] The options for the instances.
 	 * @return {Object} An object containing created Endb instances.
 	 * @example
-	 * const { users, members } = Endb.multi(['users', 'members']);
-	 * const { users, members } = Endb.multi(['users', 'members'], {
+	 * const endb = Endb.multi(['users', 'members']);
+	 * const endb = Endb.multi(['users', 'members'], {
 	 *     uri: 'sqlite://endb.sqlite',
 	 *     namespace: 'mydb'
 	 * });
 	 *
-	 * await users.set('foo', 'bar');
-	 * await members.set('bar', 'foo');
+	 * await enbb.users.set('foo', 'bar');
+	 * await endb.members.set('bar', 'foo');
 	 */
 	static multi(names, options = {}) {
 		if (!Array.isArray(names) || names.length === 0) {

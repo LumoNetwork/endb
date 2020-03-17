@@ -1,6 +1,6 @@
 'use strict';
 
-const {EventEmitter} = require('events');
+const EventEmitter = require('events');
 const {removeKeyPrefix, safeRequire} = require('../util');
 
 module.exports = class SQL extends EventEmitter {
