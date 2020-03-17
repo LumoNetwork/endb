@@ -301,11 +301,11 @@ class Util {
 		}
 	}
 
-	static propExists(obj, path) {
+	static propExists(object, path) {
 		return Boolean(
-			path.split('.').reduce((obj, prop) => {
-				return obj && obj[prop] ? obj[prop] : undefined;
-			}, obj)
+			path.split('.').reduce((object, prop) => {
+				return object && object[prop] ? object[prop] : undefined;
+			}, object)
 		);
 	}
 }
